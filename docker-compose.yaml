@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  server:
+    ports:
+      - "8080:8080"
+    container_name: server
+    environment:
+      - DB_PORT=6379
+      - DB_HOST=redis
+      - DB_NAME=mal-web
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - redis
+    networks:
+      - backend
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+    
+networks:
+  backend:
+    driver: bridge
